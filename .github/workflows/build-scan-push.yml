@@ -2,7 +2,7 @@ name: Build, Scan and Push Container
 
 on:
   push:
-    branches: [main]
+    branches: [main, hadolint]
   pull_request:
   workflow_dispatch:
 
@@ -14,9 +14,20 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
+  hadolint:
+    name: Hadolint
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: Dockerfile
+      
   build-scan-push:
     name: Build, scan and push
     runs-on: ubuntu-24.04
+    needs: hadolint
 
     permissions:
       contents: read
