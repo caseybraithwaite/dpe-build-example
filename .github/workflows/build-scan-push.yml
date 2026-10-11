@@ -2,7 +2,7 @@ name: Build, Scan and Push Container
 
 on:
   push:
-    branches: [main, hadolint]
+    branches: ['*']
   pull_request:
   workflow_dispatch:
 
