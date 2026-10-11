@@ -1,0 +1,36 @@
+name: Build Golang
+
+on:
+  push:
+    branches: ["*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-go-lang:
+    name: Build Golang
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        version: ["amd64", "arm64"]
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.27"
+
+      - name: Build Go Binary
+        working-directory: golang
+        run: |
+          go test ./...
+          
+          export GOOS=linux
+          export GOARCH=${{ matrix.version }}
+          echo "Building binary for ${GOOS}, ${GOARCH}"
+          go build
